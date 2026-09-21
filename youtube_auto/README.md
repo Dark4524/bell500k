@@ -12,11 +12,12 @@
 
 ## 必要なGitHub Secrets
 
-OAuth接続後に次の3件をPrivateリポジトリ側へ登録します。
+OAuth接続後に最低限、次の2件をPrivateリポジトリ側へ登録します。
 
 - `YOUTUBE_CLIENT_ID`
-- `YOUTUBE_CLIENT_SECRET`
 - `YOUTUBE_REFRESH_TOKEN`
+
+ダウンロードしたOAuthクライアントに `client_secret` が含まれる場合だけ、`YOUTUBE_CLIENT_SECRET` も追加します。Desktop OAuthはpublic clientとして扱われるため、client secretを必須条件にはしません。
 
 ## Google側で一度だけ必要な設定
 
@@ -25,7 +26,7 @@ OAuth接続後に次の3件をPrivateリポジトリ側へ登録します。
 3. Desktop app または適切なOAuth clientを作成。
 4. OAuth client JSONをPCへ保存。
 5. `get_refresh_token.py` をPCで一度実行し、ブラウザでYouTubeチャンネルへのアップロード権限を承認。
-6. 得られた3値をGitHub Secretsへ保存。
+6. 得られたClient IDとRefresh TokenをGitHub Secretsへ保存。Client Secretが返る構成ならそれも保存。
 
 使用スコープは最小限の `youtube.upload` のみです。
 
@@ -56,3 +57,8 @@ OAuth接続後に次の3件をPrivateリポジトリ側へ登録します。
 ## 注意
 
 新しい未監査APIプロジェクトから `videos.insert` でアップロードした動画は、Google側の監査を通すまで非公開に制限される場合があります。初期テストはその仕様と相性がよいため、private限定で始めます。
+
+
+## OAuth Testing運用の注意
+
+Google Auth Platformを External / Testing のまま使う場合、`youtube.upload` のような基本プロフィール以外のスコープを含むrefresh tokenは原則7日で期限切れになります。最初の非公開アップロード試験には使えますが、30日間の無人運転に入れる前にOAuthの公開状態・確認要否を整理します。
