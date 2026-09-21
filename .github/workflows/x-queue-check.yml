@@ -1,0 +1,24 @@
+name: X Queue Safety Check
+
+on:
+  push:
+    paths:
+      - "x_auto/queue.json"
+      - "x_auto/settings.json"
+      - "x_auto/validate_queue.py"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate X queue
+        run: python x_auto/validate_queue.py
