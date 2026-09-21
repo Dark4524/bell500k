@@ -8,7 +8,7 @@
     },
     "youtube": {
       "enabled": false,
-      "live_adapter": null
+      "live_adapter": "../youtube_auto/youtube_upload.py"
     },
     "instagram": {
       "enabled": false,
