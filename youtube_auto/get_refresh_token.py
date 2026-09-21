@@ -47,10 +47,11 @@ def main():
 
     result = {
         "client_id": credentials.client_id,
-        "client_secret": credentials.client_secret,
         "refresh_token": credentials.refresh_token,
         "scope": SCOPE,
     }
+    if credentials.client_secret:
+        result["client_secret"] = credentials.client_secret
     print(json.dumps(result, ensure_ascii=False, indent=2))
     print(
         "\nStore these values only in GitHub Actions Secrets. "
