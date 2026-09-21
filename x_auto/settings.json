@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "max_posts_per_day": 2,
+  "max_attempts_per_item": 2,
+  "block_exact_duplicates": true,
+  "strip_hashtags": true,
+  "max_raw_characters": 280,
+  "metrics_enabled": false,
+  "metrics_checkpoints_hours": [24, 72]
+}
