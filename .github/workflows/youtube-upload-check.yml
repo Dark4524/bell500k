@@ -1,0 +1,29 @@
+name: YouTube Upload Check
+
+on:
+  push:
+    paths:
+      - "youtube_auto/**"
+      - ".github/workflows/youtube-upload-check.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check ffprobe
+        run: ffprobe -version | head -n 1
+
+      - name: Install YouTube API dependencies
+        run: pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Validate YouTube queue
+        run: python youtube_auto/youtube_upload.py --mode validate
