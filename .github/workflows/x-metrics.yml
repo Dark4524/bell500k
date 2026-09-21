@@ -1,0 +1,46 @@
+name: X Metrics Snapshot
+
+on:
+  schedule:
+    - cron: "5 12 * * *" # 21:05 JST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests requests-oauthlib
+
+      - name: Collect X metrics
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: python x_auto/x_metrics.py
+
+      - name: Save metrics
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          if git diff --quiet -- x_auto/queue.json; then
+            echo "No metrics change."
+            exit 0
+          fi
+          git config user.name "bell-x-bot"
+          git config user.email "bell-x-bot@users.noreply.github.com"
+          git add x_auto/queue.json
+          git commit -m "Record X metrics snapshot"
+          git push
