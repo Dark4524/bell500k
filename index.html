@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0f13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BELL 500K">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>BELL 500K CONTROL</title>
+<style>
+:root{--bg:#0d0f13;--p:#171a21;--p2:#20242d;--t:#f4f6f8;--m:#a7adbb;--b:#303642;--a:#7c8cff;--g:#5bc97c;--w:#e3b75d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
+main{max-width:560px;margin:auto;padding:12px}.top{display:flex;justify-content:space-between;align-items:end;gap:8px;margin-bottom:10px}
+h1{font-size:20px;margin:0}.sub,.sm{font-size:12px;color:var(--m)}.card{background:var(--p);border:1px solid var(--b);border-radius:14px;padding:13px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.k{background:var(--p2);border-radius:10px;padding:10px}.lab{font-size:11px;color:var(--m)}.val{font-size:22px;font-weight:750;margin-top:2px}
+.big{font-size:30px}.bar{height:10px;background:var(--p2);border-radius:99px;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;background:var(--a);width:0}
+input,textarea,button{font:inherit}input,textarea{width:100%;background:var(--p2);color:var(--t);border:1px solid var(--b);border-radius:9px;padding:11px;font-size:16px}
+textarea{min-height:65px;resize:vertical}button{min-height:43px;border:0;border-radius:9px;padding:9px 12px;background:var(--a);color:#fff;font-weight:700}
+button.alt{background:transparent;border:1px solid var(--b);color:var(--t)}label{display:block;font-size:11px;color:var(--m);margin-bottom:4px}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.good{color:var(--g)}.warn{color:var(--w)}.status{font-size:12px;color:var(--m);border-top:1px solid var(--b);padding-top:9px;margin-top:9px;line-height:1.5}
+.hist{display:grid;grid-template-columns:70px 1fr auto auto;gap:6px;align-items:center;background:var(--p2);padding:8px;border-radius:9px;margin-top:6px;font-size:12px}.note{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--m)}
+.hist button{min-height:30px;padding:4px 7px;background:transparent;border:1px solid var(--b);color:var(--m);font-size:11px}
+details{margin-top:8px}summary{font-size:12px;color:var(--m)}@media(max-width:430px){main{padding:8px}.hist{grid-template-columns:65px 1fr auto}.note{display:none}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><div><h1>BELL 500K CONTROL</h1><div class="sub">30日チャレンジ / Web版</div></div><div id="date" class="sm"></div></div>
+
+<section class="card">
+<div class="grid">
+<div class="k"><div class="lab">現在売上</div><div id="cur" class="val big">¥0</div></div>
+<div class="k"><div class="lab">達成率</div><div id="pct" class="val big">0%</div></div>
+<div class="k"><div class="lab">残り売上</div><div id="rem" class="val">¥500,000</div></div>
+<div class="k"><div class="lab">残り日数</div><div id="days" class="val">30日</div></div>
+</div>
+<div class="bar"><i id="bar"></i></div>
+<div class="grid">
+<div class="k"><div class="lab">これから1日平均</div><div id="need" class="val">¥16,667</div></div>
+<div class="k"><div class="lab">目標ペースとの差</div><div id="pace" class="val">±¥0</div></div>
+</div>
+<div id="status" class="status">開始前です。</div>
+</section>
+
+<section class="card">
+<div class="sm" style="margin-bottom:7px">売上を追加</div>
+<div class="row"><div><label>金額</label><input id="amt" inputmode="numeric" type="number" min="1" placeholder="例：4980"></div><button id="add">＋追加</button></div>
+<input id="note" style="margin-top:8px" placeholder="内容・商品名（任意）">
+<div id="todaySales" class="sm" style="margin-top:8px">今日 ¥0</div>
+</section>
+
+<section class="card">
+<div class="sm" style="margin-bottom:7px">今日やること</div>
+<textarea id="task" placeholder="今日いちばん売上に近い作業を1つ"></textarea>
+<div class="grid" style="margin-top:8px"><button id="done">完了にする</button><button id="clear" class="alt">クリア</button></div>
+<div id="taskState" class="sm" style="margin-top:8px">未完了</div>
+</section>
+
+<section class="card">
+<div class="sm">最近の売上</div><div id="hist"></div>
+</section>
+
+<section class="card">
+<details><summary>設定</summary>
+<div class="grid" style="margin-top:9px">
+<div><label>目標売上</label><input id="goal" type="number" value="500000"></div>
+<div><label>初期売上</label><input id="base" type="number" value="0"></div>
+<div><label>開始日</label><input id="start" type="date" value="2026-09-22"></div>
+<div><label>終了日</label><input id="end" type="date" value="2026-10-21"></div>
+</div>
+</details>
+</section>
+<div id="saved" class="sm" style="text-align:center;padding-bottom:8px">端末内に自動保存</div>
+</main>
+<script>
+(()=>{const $=x=>document.getElementById(x),K="bell500k-web-v1",pad=n=>String(n).padStart(2,"0"),yen=n=>"¥"+Math.round(Math.abs(n)).toLocaleString("ja-JP");
+const iso=()=>{let d=new Date;return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())},pd=s=>{let a=s.split("-").map(Number);return new Date(a[0],a[1]-1,a[2],12)},dd=(a,b)=>Math.round((b-a)/864e5);
+let S={goal:500000,base:0,start:"2026-09-22",end:"2026-10-21",sales:[],task:"",taskDone:false,taskDate:iso()};
+try{let r=localStorage.getItem(K);if(r)S={...S,...JSON.parse(r)}}catch(e){}
+if(S.taskDate!==iso()){S.task="";S.taskDone=false;S.taskDate=iso()}
+const save=()=>{localStorage.setItem(K,JSON.stringify(S));$("saved").textContent="最終保存 "+new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"})};
+const total=()=>Number(S.base||0)+S.sales.reduce((a,b)=>a+Number(b.amount||0),0);
+function render(){
+let t=pd(iso()),a=pd(S.start),b=pd(S.end),all=Math.max(1,dd(a,b)+1),el=t<a?0:t>b?all:dd(a,t)+1,left=t<a?all:t>b?0:dd(t,b)+1,cur=total(),rem=Math.max(0,S.goal-cur),pct=Math.min(100,cur/S.goal*100),expected=S.goal*(el/all),pace=cur-expected;
+$("date").textContent=new Date().toLocaleDateString("ja-JP",{month:"numeric",day:"numeric",weekday:"short"});$("cur").textContent=yen(cur);$("pct").textContent=(pct<10?pct.toFixed(1):pct.toFixed(0))+"%";$("rem").textContent=yen(rem);$("days").textContent=left+"日";$("need").textContent=yen(left?rem/left:rem);$("bar").style.width=pct+"%";$("pace").textContent=(pace>0?"+":pace<0?"-":"±")+yen(pace);$("pace").className="val "+(pace>=0?"good":"warn");
+$("status").textContent=t<a?"開始前です。開始日からペース計算します。":t>b?(rem?"期間終了。残り "+yen(rem):"期間終了・目標達成です。"):(pace>=0?"目標ペースより "+yen(pace)+" 前です。":"目標ペースより "+yen(pace)+" 遅れています。");
+$("todaySales").textContent="今日 "+yen(S.sales.filter(x=>x.date===iso()).reduce((a,b)=>a+b.amount,0));$("task").value=S.task;$("taskState").textContent=S.taskDone?"完了":"未完了";$("taskState").className="sm "+(S.taskDone?"good":"");$("done").disabled=S.taskDone;
+$("goal").value=S.goal;$("base").value=S.base;$("start").value=S.start;$("end").value=S.end;
+let h=[...S.sales].reverse().slice(0,8);$("hist").innerHTML=h.length?h.map(x=>'<div class="hist"><div>'+x.date.slice(5).replace("-","/")+'</div><div class="note">'+(x.note||"売上")+'</div><b>'+yen(x.amount)+'</b><button data-id="'+x.id+'">削除</button></div>').join(""):'<div class="sm" style="margin-top:7px">まだ売上登録はありません。</div>';
+$("hist").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.sales=S.sales.filter(x=>x.id!==b.dataset.id);save();render()})}
+$("add").onclick=()=>{let v=Number($("amt").value);if(!(v>0))return;S.sales.push({id:Date.now().toString(36),date:iso(),amount:Math.round(v),note:$("note").value.trim()});$("amt").value="";$("note").value="";save();render()};
+$("task").oninput=()=>{S.task=$("task").value;S.taskDone=false;S.taskDate=iso();save();render()};$("done").onclick=()=>{S.taskDone=true;save();render()};$("clear").onclick=()=>{S.task="";S.taskDone=false;save();render()};
+["goal","base","start","end"].forEach(id=>$(id).onchange=()=>{if(id==="goal")S.goal=Math.max(1,Number($(id).value)||500000);if(id==="base")S.base=Math.max(0,Number($(id).value)||0);if(id==="start")S.start=$(id).value;if(id==="end")S.end=$(id).value;save();render()});
+render();save();setInterval(render,60000);
+})();
+</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
+</script>
+</body></html>
