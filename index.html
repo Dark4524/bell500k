@@ -10,93 +10,76 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <title>BELL 500K CONTROL</title>
 <style>
-:root{--bg:#0d0f13;--p:#171a21;--p2:#20242d;--t:#f4f6f8;--m:#a7adbb;--b:#303642;--a:#7c8cff;--g:#5bc97c;--w:#e3b75d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
-main{max-width:560px;margin:auto;padding:12px}.top{display:flex;justify-content:space-between;align-items:end;gap:8px;margin-bottom:10px}
-h1{font-size:20px;margin:0}.sub,.sm{font-size:12px;color:var(--m)}.card{background:var(--p);border:1px solid var(--b);border-radius:14px;padding:13px;margin-bottom:10px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.k{background:var(--p2);border-radius:10px;padding:10px}.lab{font-size:11px;color:var(--m)}.val{font-size:22px;font-weight:750;margin-top:2px}
-.big{font-size:30px}.bar{height:10px;background:var(--p2);border-radius:99px;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;background:var(--a);width:0}
-input,textarea,button{font:inherit}input,textarea{width:100%;background:var(--p2);color:var(--t);border:1px solid var(--b);border-radius:9px;padding:11px;font-size:16px}
-textarea{min-height:65px;resize:vertical}button{min-height:43px;border:0;border-radius:9px;padding:9px 12px;background:var(--a);color:#fff;font-weight:700}
-button.alt{background:transparent;border:1px solid var(--b);color:var(--t)}label{display:block;font-size:11px;color:var(--m);margin-bottom:4px}
-.row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.good{color:var(--g)}.warn{color:var(--w)}.status{font-size:12px;color:var(--m);border-top:1px solid var(--b);padding-top:9px;margin-top:9px;line-height:1.5}
-.hist{display:grid;grid-template-columns:70px 1fr auto auto;gap:6px;align-items:center;background:var(--p2);padding:8px;border-radius:9px;margin-top:6px;font-size:12px}.note{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--m)}
-.hist button{min-height:30px;padding:4px 7px;background:transparent;border:1px solid var(--b);color:var(--m);font-size:11px}
-details{margin-top:8px}summary{font-size:12px;color:var(--m)}@media(max-width:430px){main{padding:8px}.hist{grid-template-columns:65px 1fr auto}.note{display:none}}
+:root{--bg:#0d0f13;--panel:#171a21;--panel2:#20242d;--text:#f4f6f8;--muted:#a7adbb;--border:#303642;--accent:#7c8cff;--good:#5bc97c;--warn:#e3b75d;--danger:#e47777}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",system-ui,sans-serif}
+button,input,textarea{font:inherit}.wrap{max-width:560px;margin:0 auto;padding:10px}.top{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:2px 2px 10px}
+h1{margin:0;font-size:19px;letter-spacing:.03em}.sub{font-size:11px;color:var(--muted);margin-top:2px}.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kpi{background:var(--panel2);border-radius:11px;padding:10px;min-width:0}.label{font-size:11px;color:var(--muted)}
+.value{font-size:22px;font-weight:750;margin-top:2px;word-break:break-word}.value.big{font-size:30px}.good{color:var(--good)!important}.warn{color:var(--warn)!important}.danger{color:var(--danger)!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}input,textarea{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:10px 11px;font-size:16px;outline:none}
+textarea{min-height:64px;resize:vertical}input:focus,textarea:focus{border-color:var(--accent)}button{min-height:42px;border:0;border-radius:9px;padding:9px 12px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}
+button.secondary{background:transparent;border:1px solid var(--border);color:var(--text)}button.ghost{background:var(--panel2);color:var(--text)}button.danger{background:transparent;border:1px solid #663d3d;color:#f0aaaa}button:disabled{opacity:.5;cursor:not-allowed}
+.bar{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-top:9px}.bar>div{height:100%;width:0;background:var(--accent);transition:width .2s ease}
+.status{margin-top:9px;padding-top:9px;border-top:1px solid var(--border);font-size:12px;line-height:1.55;color:var(--muted)}.section-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.section-title strong{font-size:14px}.small{font-size:11px;color:var(--muted)}
+.sales-add{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:end}.history{display:flex;flex-direction:column;gap:6px;margin-top:8px}.hist{display:grid;grid-template-columns:78px 1fr auto auto;gap:7px;align-items:center;background:var(--panel2);border-radius:9px;padding:8px 9px;font-size:12px}
+.hist .amt{font-weight:700}.hist .note{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.iconbtn{min-height:32px;padding:4px 8px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px}
+.chart-wrap{overflow:hidden;background:var(--panel2);border-radius:10px;padding:7px}#chart{display:block;width:100%;height:auto}.toolbar{display:flex;flex-wrap:wrap;gap:7px}details{border-top:1px solid var(--border);margin-top:10px;padding-top:9px}summary{cursor:pointer;color:var(--muted);font-size:12px}
+.compact .optional{display:none}.compact .card{padding:10px;margin-bottom:8px}.compact .value.big{font-size:27px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:2px 0 5px}input[type=file]{display:none}
+@media(max-width:430px){.wrap{padding:8px}.grid3{grid-template-columns:1fr}.sales-add{grid-template-columns:1fr 1fr}.sales-add button{grid-column:1/-1}.hist{grid-template-columns:72px 1fr auto}.hist .note{display:none}}
 </style>
 </head>
 <body>
-<main>
-<div class="top"><div><h1>BELL 500K CONTROL</h1><div class="sub">30日チャレンジ / Web版</div></div><div id="date" class="sm"></div></div>
+<main id="app" class="wrap">
+<div class="top"><div><h1>BELL 500K CONTROL</h1><div class="sub">30日チャレンジ / Web完全版 v4</div></div><button id="compactBtn" type="button" class="ghost" style="min-height:34px;padding:5px 9px;font-size:11px">コンパクト</button></div>
 
-<section class="card">
-<div class="grid">
-<div class="k"><div class="lab">現在売上</div><div id="cur" class="val big">¥0</div></div>
-<div class="k"><div class="lab">達成率</div><div id="pct" class="val big">0%</div></div>
-<div class="k"><div class="lab">残り売上</div><div id="rem" class="val">¥500,000</div></div>
-<div class="k"><div class="lab">残り日数</div><div id="days" class="val">30日</div></div>
-</div>
-<div class="bar"><i id="bar"></i></div>
-<div class="grid">
-<div class="k"><div class="lab">これから1日平均</div><div id="need" class="val">¥16,667</div></div>
-<div class="k"><div class="lab">目標ペースとの差</div><div id="pace" class="val">±¥0</div></div>
-</div>
-<div id="status" class="status">開始前です。</div>
-</section>
+<section class="card"><div class="section-title"><strong>進捗</strong><span id="todayLabel" class="small"></span></div>
+<div class="kpis"><div class="kpi"><div class="label">現在売上</div><div id="currentSales" class="value big">¥0</div></div><div class="kpi"><div class="label">達成率</div><div id="pct" class="value big">0%</div></div><div class="kpi"><div class="label">残り売上</div><div id="remaining" class="value">¥500,000</div></div><div class="kpi"><div class="label">残り日数</div><div id="daysLeft" class="value">30日</div></div></div>
+<div class="bar"><div id="progressBar"></div></div>
+<div class="grid2" style="margin-top:8px"><div class="kpi"><div class="label">これから1日平均</div><div id="dailyNeed" class="value">¥16,667</div></div><div class="kpi"><div class="label">目標ペースとの差</div><div id="pace" class="value">±¥0</div></div></div>
+<div id="paceText" class="status">開始前です。</div></section>
 
-<section class="card">
-<div class="sm" style="margin-bottom:7px">売上を追加</div>
-<div class="row"><div><label>金額</label><input id="amt" inputmode="numeric" type="number" min="1" placeholder="例：4980"></div><button id="add">＋追加</button></div>
-<input id="note" style="margin-top:8px" placeholder="内容・商品名（任意）">
-<div id="todaySales" class="sm" style="margin-top:8px">今日 ¥0</div>
-</section>
+<section class="card"><div class="section-title"><strong>売上を追加</strong><span id="todaySales" class="small">今日 ¥0</span></div>
+<div class="sales-add"><div><label for="saleAmount">金額</label><input id="saleAmount" inputmode="numeric" type="number" min="1" step="100" placeholder="例：4980"></div><div><label for="saleNote">内容（任意）</label><input id="saleNote" type="text" placeholder="商品名など"></div><button id="addSale" type="button">＋ 追加</button></div>
+<div class="toolbar optional" style="margin-top:8px"><button type="button" class="ghost quick" data-v="980">+980</button><button type="button" class="ghost quick" data-v="2980">+2,980</button><button type="button" class="ghost quick" data-v="4980">+4,980</button><button type="button" class="ghost quick" data-v="9800">+9,800</button></div></section>
 
-<section class="card">
-<div class="sm" style="margin-bottom:7px">今日やること</div>
-<textarea id="task" placeholder="今日いちばん売上に近い作業を1つ"></textarea>
-<div class="grid" style="margin-top:8px"><button id="done">完了にする</button><button id="clear" class="alt">クリア</button></div>
-<div id="taskState" class="sm" style="margin-top:8px">未完了</div>
-</section>
+<section class="card"><div class="section-title"><strong>今日やること</strong><span id="taskState" class="small">未完了</span></div><textarea id="task" placeholder="今日いちばん売上に近い作業を1つ"></textarea><div class="grid2" style="margin-top:8px"><button id="taskDone" type="button">完了にする</button><button id="taskClear" type="button" class="secondary">クリア</button></div></section>
 
-<section class="card">
-<div class="sm">最近の売上</div><div id="hist"></div>
-</section>
+<section class="card optional"><div class="section-title"><strong>30日ペース</strong><span class="small">累計売上 vs 目標線</span></div><div class="chart-wrap"><svg id="chart" viewBox="0 0 520 180" role="img" aria-label="30日チャレンジの売上推移グラフ"></svg></div></section>
 
-<section class="card">
-<details><summary>設定</summary>
-<div class="grid" style="margin-top:9px">
-<div><label>目標売上</label><input id="goal" type="number" value="500000"></div>
-<div><label>初期売上</label><input id="base" type="number" value="0"></div>
-<div><label>開始日</label><input id="start" type="date" value="2026-09-22"></div>
-<div><label>終了日</label><input id="end" type="date" value="2026-10-21"></div>
-</div>
-</details>
-</section>
-<div id="saved" class="sm" style="text-align:center;padding-bottom:8px">端末内に自動保存</div>
-</main>
+<section class="card optional"><div class="section-title"><strong>最近の売上</strong><span id="salesCount" class="small">0件</span></div><div id="history" class="history"></div></section>
+
+<section class="card optional"><div class="section-title"><strong>バックアップ</strong></div><div class="toolbar"><button id="exportBtn" type="button" class="secondary">データを書き出す</button><button id="importBtn" type="button" class="secondary">データを読み込む</button><button id="csvBtn" type="button" class="secondary">売上CSV</button><input id="importFile" type="file" accept=".json,application/json"></div>
+<details><summary>設定</summary><div class="grid2" style="margin-top:9px"><div><label for="goal">目標売上</label><input id="goal" type="number" min="1" step="1000" value="500000"></div><div><label for="baseSales">初期売上</label><input id="baseSales" type="number" min="0" step="1000" value="0"></div><div><label for="start">開始日</label><input id="start" type="date" value="2026-09-22"></div><div><label for="end">終了日</label><input id="end" type="date" value="2026-10-21"></div></div><button id="resetAll" type="button" class="danger" style="width:100%;margin-top:10px">全データを初期化</button></details></section>
+<div id="updated" class="footer">最終保存 --</div></main>
+
 <script>
-(()=>{const $=x=>document.getElementById(x),K="bell500k-web-v1",pad=n=>String(n).padStart(2,"0"),yen=n=>"¥"+Math.round(Math.abs(n)).toLocaleString("ja-JP");
-const iso=()=>{let d=new Date;return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())},pd=s=>{let a=s.split("-").map(Number);return new Date(a[0],a[1]-1,a[2],12)},dd=(a,b)=>Math.round((b-a)/864e5);
-let S={goal:500000,base:0,start:"2026-09-22",end:"2026-10-21",sales:[],task:"",taskDone:false,taskDate:iso()};
-try{let r=localStorage.getItem(K);if(r)S={...S,...JSON.parse(r)}}catch(e){}
-if(S.taskDate!==iso()){S.task="";S.taskDone=false;S.taskDate=iso()}
-const save=()=>{localStorage.setItem(K,JSON.stringify(S));$("saved").textContent="最終保存 "+new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"})};
-const total=()=>Number(S.base||0)+S.sales.reduce((a,b)=>a+Number(b.amount||0),0);
-function render(){
-let t=pd(iso()),a=pd(S.start),b=pd(S.end),all=Math.max(1,dd(a,b)+1),el=t<a?0:t>b?all:dd(a,t)+1,left=t<a?all:t>b?0:dd(t,b)+1,cur=total(),rem=Math.max(0,S.goal-cur),pct=Math.min(100,cur/S.goal*100),expected=S.goal*(el/all),pace=cur-expected;
-$("date").textContent=new Date().toLocaleDateString("ja-JP",{month:"numeric",day:"numeric",weekday:"short"});$("cur").textContent=yen(cur);$("pct").textContent=(pct<10?pct.toFixed(1):pct.toFixed(0))+"%";$("rem").textContent=yen(rem);$("days").textContent=left+"日";$("need").textContent=yen(left?rem/left:rem);$("bar").style.width=pct+"%";$("pace").textContent=(pace>0?"+":pace<0?"-":"±")+yen(pace);$("pace").className="val "+(pace>=0?"good":"warn");
-$("status").textContent=t<a?"開始前です。開始日からペース計算します。":t>b?(rem?"期間終了。残り "+yen(rem):"期間終了・目標達成です。"):(pace>=0?"目標ペースより "+yen(pace)+" 前です。":"目標ペースより "+yen(pace)+" 遅れています。");
-$("todaySales").textContent="今日 "+yen(S.sales.filter(x=>x.date===iso()).reduce((a,b)=>a+b.amount,0));$("task").value=S.task;$("taskState").textContent=S.taskDone?"完了":"未完了";$("taskState").className="sm "+(S.taskDone?"good":"");$("done").disabled=S.taskDone;
-$("goal").value=S.goal;$("base").value=S.base;$("start").value=S.start;$("end").value=S.end;
-let h=[...S.sales].reverse().slice(0,8);$("hist").innerHTML=h.length?h.map(x=>'<div class="hist"><div>'+x.date.slice(5).replace("-","/")+'</div><div class="note">'+(x.note||"売上")+'</div><b>'+yen(x.amount)+'</b><button data-id="'+x.id+'">削除</button></div>').join(""):'<div class="sm" style="margin-top:7px">まだ売上登録はありません。</div>';
-$("hist").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.sales=S.sales.filter(x=>x.id!==b.dataset.id);save();render()})}
-$("add").onclick=()=>{let v=Number($("amt").value);if(!(v>0))return;S.sales.push({id:Date.now().toString(36),date:iso(),amount:Math.round(v),note:$("note").value.trim()});$("amt").value="";$("note").value="";save();render()};
-$("task").oninput=()=>{S.task=$("task").value;S.taskDone=false;S.taskDate=iso();save();render()};$("done").onclick=()=>{S.taskDone=true;save();render()};$("clear").onclick=()=>{S.task="";S.taskDone=false;save();render()};
-["goal","base","start","end"].forEach(id=>$(id).onchange=()=>{if(id==="goal")S.goal=Math.max(1,Number($(id).value)||500000);if(id==="base")S.base=Math.max(0,Number($(id).value)||0);if(id==="start")S.start=$(id).value;if(id==="end")S.end=$(id).value;save();render()});
-render();save();setInterval(render,60000);
-})();
+(()=>{const $=id=>document.getElementById(id),app=$("app"),KEY="bell500k-web-v1",pad=n=>String(n).padStart(2,"0"),money=n=>"¥"+Math.round(Math.abs(n)).toLocaleString("ja-JP");
+const isoToday=()=>{const d=new Date;return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())},nowText=()=>{const d=new Date;return d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes())};
+const parseDate=s=>{const a=String(s).split("-").map(Number);return new Date(a[0],a[1]-1,a[2],12)},dayDiff=(a,b)=>Math.round((b-a)/86400000),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),clamp=(n,min,max)=>Math.min(max,Math.max(min,Number.isFinite(n)?n:min));
+const defaults={goal:500000,baseSales:0,start:"2026-09-22",end:"2026-10-21",sales:[],task:"",taskDone:false,taskDate:isoToday(),compact:false,updated:""};
+let state={...defaults};
+function normalize(raw){const s={...defaults,...(raw||{})};if(raw&&raw.base!==undefined&&raw.baseSales===undefined)s.baseSales=raw.base;s.goal=clamp(Number(s.goal),1,1e9);s.baseSales=clamp(Number(s.baseSales),0,1e9);s.sales=Array.isArray(s.sales)?s.sales.filter(x=>x&&Number(x.amount)>0).map(x=>({id:String(x.id||Date.now()+Math.random()),date:String(x.date||isoToday()),amount:clamp(Number(x.amount),1,1e9),note:String(x.note||"")})):[];s.task=String(s.task||"");s.taskDone=!!s.taskDone;s.taskDate=String(s.taskDate||isoToday());s.compact=!!s.compact;return s}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw)state=normalize(JSON.parse(raw))}catch(e){state={...defaults}}if(state.taskDate!==isoToday()){state.task="";state.taskDone=false;state.taskDate=isoToday()}}
+function save(){state.updated=nowText();localStorage.setItem(KEY,JSON.stringify(state));$("updated").textContent="最終保存 "+state.updated}
+const totalSales=()=>state.baseSales+state.sales.reduce((a,b)=>a+Number(b.amount||0),0);
+const totalDays=()=>Math.max(1,dayDiff(parseDate(state.start),parseDate(state.end))+1);
+function elapsedDays(){const t=parseDate(isoToday()),a=parseDate(state.start),b=parseDate(state.end);if(t<a)return 0;if(t>b)return totalDays();return dayDiff(a,t)+1}
+function daysLeft(){const t=parseDate(isoToday()),a=parseDate(state.start),b=parseDate(state.end);if(t<a)return totalDays();if(t>b)return 0;return dayDiff(t,b)+1}
+const todaySales=()=>state.sales.filter(x=>x.date===isoToday()).reduce((a,b)=>a+Number(b.amount||0),0);
+function renderChart(){const svg=$("chart"),W=520,H=180,pL=42,pR=12,pT=12,pB=28,days=totalDays(),maxY=Math.max(state.goal,totalSales(),1),x=i=>pL+(W-pL-pR)*(i/Math.max(1,days-1)),y=v=>pT+(H-pT-pB)*(1-v/maxY),daily={};state.sales.forEach(s=>daily[s.date]=(daily[s.date]||0)+Number(s.amount));let actual=state.baseSales,points=[],start=parseDate(state.start);for(let i=0;i<days;i++){const d=new Date(start);d.setDate(start.getDate()+i);const ds=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());actual+=daily[ds]||0;points.push([x(i),y(actual)])}const actualPts=points.map(p=>p.join(",")).join(" "),targetPts=Array.from({length:days},(_,i)=>[x(i),y(state.goal*((i+1)/days))].join(",")).join(" "),gridVals=[0,.25,.5,.75,1].map(r=>Math.round(maxY*r));let grid="";gridVals.forEach(v=>{const yy=y(v);grid+='<line x1="'+pL+'" y1="'+yy+'" x2="'+(W-pR)+'" y2="'+yy+'" stroke="#303642" stroke-width="1"/><text x="'+(pL-5)+'" y="'+(yy+4)+'" text-anchor="end" font-size="9" fill="#8f96a5">'+Math.round(v/1000)+'k</text>'});const last=points[points.length-1]||[pL,y(0)];svg.innerHTML=grid+'<polyline points="'+targetPts+'" fill="none" stroke="#777f90" stroke-width="2" stroke-dasharray="5 5"/><polyline points="'+actualPts+'" fill="none" stroke="#7c8cff" stroke-width="3"/><text x="'+pL+'" y="'+(H-8)+'" font-size="9" fill="#8f96a5">'+esc(state.start)+'</text><text x="'+(W-pR)+'" y="'+(H-8)+'" text-anchor="end" font-size="9" fill="#8f96a5">'+esc(state.end)+'</text><circle cx="'+last[0]+'" cy="'+last[1]+'" r="4" fill="#7c8cff"/>'}
+function renderHistory(){const box=$("history"),list=[...state.sales].reverse().slice(0,8);$("salesCount").textContent=state.sales.length+"件";if(!list.length){box.innerHTML='<div class="small">まだ売上登録はありません。</div>';return}box.innerHTML=list.map(s=>'<div class="hist"><div>'+esc(s.date.slice(5).replace("-","/"))+'</div><div class="note">'+esc(s.note||"売上")+'</div><div class="amt">'+money(s.amount)+'</div><button type="button" class="iconbtn" data-del="'+esc(s.id)+'">削除</button></div>').join("");box.querySelectorAll("[data-del]").forEach(btn=>btn.addEventListener("click",()=>{state.sales=state.sales.filter(s=>s.id!==btn.dataset.del);save();render()}))}
+function render(){if(parseDate(state.end)<parseDate(state.start))state.end=state.start;const total=totalSales(),remain=Math.max(0,state.goal-total),pct=Math.min(100,total/state.goal*100),left=daysLeft(),elapsed=elapsedDays(),expected=state.goal*(elapsed/totalDays()),pace=total-expected,need=left>0?remain/left:remain;$("todayLabel").textContent=new Date().toLocaleDateString("ja-JP",{month:"numeric",day:"numeric",weekday:"short"});$("currentSales").textContent=money(total);$("pct").textContent=(pct<10?pct.toFixed(1):pct.toFixed(0))+"%";$("remaining").textContent=money(remain);$("daysLeft").textContent=left+"日";$("dailyNeed").textContent=money(need);$("pace").textContent=(pace>0?"+":pace<0?"-":"±")+money(pace);$("pace").className="value "+(pace>=0?"good":"warn");$("progressBar").style.width=pct+"%";$("todaySales").textContent="今日 "+money(todaySales());const t=parseDate(isoToday()),a=parseDate(state.start),b=parseDate(state.end);if(t<a){$("paceText").textContent="開始前です。開始日から自動で目標ペースを計算します。";$("paceText").className="status"}else if(t>b){$("paceText").textContent=remain===0?"期間終了・目標達成です。":"期間終了。残り "+money(remain)+" です。";$("paceText").className="status "+(remain===0?"good":"warn")}else if(remain===0){$("paceText").textContent="目標売上に到達しています。次は利益と再現性を確認。";$("paceText").className="status good"}else{$("paceText").textContent=pace>=0?"今日時点の目標ペースより "+money(pace)+" 前です。":"今日時点の目標ペースより "+money(pace)+" 遅れています。";$("paceText").className="status "+(pace>=0?"good":"warn")}$("task").value=state.task;$("taskState").textContent=state.taskDone?"完了":"未完了";$("taskState").className="small "+(state.taskDone?"good":"");$("taskDone").textContent=state.taskDone?"完了済み":"完了にする";$("taskDone").disabled=state.taskDone;$("goal").value=state.goal;$("baseSales").value=state.baseSales;$("start").value=state.start;$("end").value=state.end;app.classList.toggle("compact",state.compact);$("compactBtn").textContent=state.compact?"通常表示":"コンパクト";$("updated").textContent="最終保存 "+(state.updated||"--");renderHistory();renderChart()}
+function addSale(amount,note=""){amount=Number(amount);if(!Number.isFinite(amount)||amount<=0)return;state.sales.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:isoToday(),amount:Math.round(amount),note:String(note||"").trim()});$("saleAmount").value="";$("saleNote").value="";save();render()}
+$("addSale").addEventListener("click",()=>addSale($("saleAmount").value,$("saleNote").value));$("saleAmount").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addSale($("saleAmount").value,$("saleNote").value)}});document.querySelectorAll(".quick").forEach(b=>b.addEventListener("click",()=>addSale(Number(b.dataset.v),"クイック登録")));
+$("task").addEventListener("input",()=>{state.task=$("task").value;state.taskDone=false;state.taskDate=isoToday();save();render()});$("taskDone").addEventListener("click",()=>{state.taskDone=true;save();render()});$("taskClear").addEventListener("click",()=>{state.task="";state.taskDone=false;save();render()});
+["goal","baseSales","start","end"].forEach(id=>$(id).addEventListener("change",()=>{if(id==="goal")state.goal=clamp(Number($(id).value),1,1e9);if(id==="baseSales")state.baseSales=clamp(Number($(id).value),0,1e9);if(id==="start")state.start=$(id).value||defaults.start;if(id==="end")state.end=$(id).value||defaults.end;save();render()}));
+$("compactBtn").addEventListener("click",()=>{state.compact=!state.compact;save();render()});
+$("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bell500k_backup_"+isoToday()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+$("importBtn").addEventListener("click",()=>$("importFile").click());$("importFile").addEventListener("change",async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{state=normalize(JSON.parse(await file.text()));save();render()}catch(err){alert("バックアップファイルを読み込めませんでした。")}e.target.value=""});
+$("csvBtn").addEventListener("click",()=>{const rows=[["date","amount","note"],...state.sales.map(s=>[s.date,s.amount,s.note])],csv="\uFEFF"+rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(",")).join("\r\n"),blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bell500k_sales_"+isoToday()+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+$("resetAll").addEventListener("click",()=>{if(!confirm("売上履歴を含む全データを初期化しますか？"))return;state={...defaults,sales:[],taskDate:isoToday()};localStorage.removeItem(KEY);save();render()});
+load();render();setInterval(render,60000)})();
 </script>
-<script>
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
-</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}</script>
 </body></html>
