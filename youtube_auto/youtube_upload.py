@@ -35,7 +35,6 @@ def save_queue(items):
 def credentials_from_env(scope):
     required = [
         "YOUTUBE_CLIENT_ID",
-        "YOUTUBE_CLIENT_SECRET",
         "YOUTUBE_REFRESH_TOKEN",
     ]
     missing = [name for name in required if not os.getenv(name)]
@@ -49,7 +48,7 @@ def credentials_from_env(scope):
         refresh_token=os.environ["YOUTUBE_REFRESH_TOKEN"],
         token_uri=TOKEN_URI,
         client_id=os.environ["YOUTUBE_CLIENT_ID"],
-        client_secret=os.environ["YOUTUBE_CLIENT_SECRET"],
+        client_secret=os.getenv("YOUTUBE_CLIENT_SECRET"),
         scopes=[scope],
     )
     creds.refresh(Request())
