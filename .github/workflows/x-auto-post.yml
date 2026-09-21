@@ -1,6 +1,9 @@
 name: X Auto Post
 
 on:
+  push:
+    paths:
+      - "x_auto/trigger.txt"
   schedule:
     - cron: "45 22 * * *" # 07:45 JST
     - cron: "15 3 * * *"  # 12:15 JST
