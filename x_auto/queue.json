@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "2026-09-21-evening-01",
+    "date": "2026-09-21",
+    "slot": "evening",
+    "status": "ready",
+    "text": "今日はX APIとGitHub Actionsをつないで、指定時刻に自動投稿できるところまで構築しました。\n\n次は、投稿内容の生成→投稿→反応分析→改善までをつなげます。\n\nAIは、使えてなんぼ。\n#AI #自動化",
+    "tweet_id": null,
+    "posted_at": null
+  }
+]
