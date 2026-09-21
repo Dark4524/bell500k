@@ -76,7 +76,7 @@ jobs:
           python x_auto/x_post.py --mode "${{ steps.vars.outputs.mode }}" --slot "${{ steps.vars.outputs.slot }}"
 
       - name: Save queue result
-        if: ${{ steps.vars.outputs.mode == 'scheduled' }}
+        if: ${{ always() && steps.vars.outputs.mode == 'scheduled' }}
         shell: bash
         run: |
           if git diff --quiet -- x_auto/queue.json; then
