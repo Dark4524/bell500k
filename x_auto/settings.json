@@ -6,5 +6,15 @@
   "strip_hashtags": true,
   "max_raw_characters": 280,
   "metrics_enabled": false,
-  "metrics_checkpoints_hours": [24, 72]
+  "metrics_checkpoints_hours": [
+    24,
+    72
+  ],
+  "max_url_posts_per_7_days": 2,
+  "allowed_link_domains": [
+    "dark4524.github.io",
+    "x.com"
+  ],
+  "public_landing_url": "https://dark4524.github.io/bell500k/challenge/",
+  "last_configured_at": "2026-09-21"
 }
