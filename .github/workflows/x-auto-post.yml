@@ -1,0 +1,84 @@
+name: X Auto Post
+
+on:
+  schedule:
+    - cron: "45 22 * * *" # 07:45 JST
+    - cron: "15 3 * * *"  # 12:15 JST
+    - cron: "30 11 * * *" # 20:30 JST
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: "test"
+        type: choice
+        options:
+          - test
+          - scheduled
+      slot:
+        description: "Slot for scheduled mode"
+        required: true
+        default: "evening"
+        type: choice
+        options:
+          - morning
+          - midday
+          - evening
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests requests-oauthlib
+
+      - name: Resolve run mode and slot
+        id: vars
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+            echo "slot=${{ inputs.slot }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=scheduled" >> "$GITHUB_OUTPUT"
+            case "${{ github.event.schedule }}" in
+              "45 22 * * *") echo "slot=morning" >> "$GITHUB_OUTPUT" ;;
+              "15 3 * * *")  echo "slot=midday" >> "$GITHUB_OUTPUT" ;;
+              "30 11 * * *") echo "slot=evening" >> "$GITHUB_OUTPUT" ;;
+              *) echo "slot=evening" >> "$GITHUB_OUTPUT" ;;
+            esac
+          fi
+
+      - name: Post to X
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: |
+          python x_auto/x_post.py --mode "${{ steps.vars.outputs.mode }}" --slot "${{ steps.vars.outputs.slot }}"
+
+      - name: Save queue result
+        if: ${{ steps.vars.outputs.mode == 'scheduled' }}
+        shell: bash
+        run: |
+          if git diff --quiet -- x_auto/queue.json; then
+            echo "No queue change."
+            exit 0
+          fi
+          git config user.name "bell-x-bot"
+          git config user.email "bell-x-bot@users.noreply.github.com"
+          git add x_auto/queue.json
+          git commit -m "Record X auto-post result"
+          git push
