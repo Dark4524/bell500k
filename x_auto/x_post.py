@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from datetime import datetime
@@ -31,6 +32,12 @@ def auth():
         os.environ["X_ACCESS_TOKEN"],
         os.environ["X_ACCESS_TOKEN_SECRET"],
     )
+
+
+def sanitize_post_text(text):
+    # New/low-reputation accounts can receive a generic 403 on API posts
+    # containing hashtags. Preserve the words but remove the leading #.
+    return re.sub(r"(?<!\\S)#([^\\s#]+)", r"\\1", text)
 
 
 def create_post(text):
@@ -112,7 +119,13 @@ def run_scheduled(slot):
         print(f"NO_READY_POST slot={slot} date={today}")
         return
 
-    post_id = create_post(target["text"])
+    original_text = target["text"]
+    post_text = sanitize_post_text(original_text)
+    if post_text != original_text:
+        print("HASHTAGS_STRIPPED")
+        target["posted_text"] = post_text
+
+    post_id = create_post(post_text)
     target["status"] = "posted"
     target["tweet_id"] = post_id
     target["posted_at"] = now.isoformat()
