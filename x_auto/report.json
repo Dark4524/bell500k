@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-09-21T22:13:00+09:00",
+  "queue_items": 1,
+  "status_counts": {
+    "posted": 1
+  },
+  "posted_count": 1,
+  "posts_with_metrics": 0,
+  "metrics_snapshot_count": 0,
+  "latest_post": {
+    "queue_id": "2026-09-21-evening-01",
+    "tweet_id": "2102008973918429588",
+    "posted_at": "2026-09-21T21:16:07.289600+09:00",
+    "slot": "evening"
+  }
+}
