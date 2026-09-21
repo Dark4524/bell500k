@@ -1,0 +1,11 @@
+{
+  "name": "BELL 500K CONTROL",
+  "short_name": "BELL 500K",
+  "description": "30日チャレンジ売上進捗管理",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d0f13",
+  "theme_color": "#0d0f13",
+  "icons": []
+}
