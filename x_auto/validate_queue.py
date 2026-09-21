@@ -4,12 +4,17 @@ import sys
 from collections import Counter
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent
 QUEUE_PATH = BASE_DIR / "queue.json"
 SETTINGS_PATH = BASE_DIR / "settings.json"
 VALID_SLOTS = {"morning", "midday", "evening"}
 VALID_STATUS = {"ready", "posted", "blocked", "error", "hold"}
+
+
+def extract_urls(text):
+    return re.findall(r"https?://[^\\s]+", text)
 
 
 def load_json(path):
@@ -67,6 +72,15 @@ def main():
         text = str(item.get("text") or "").replace("\\n", "\n").strip()
         if status == "ready" and not text:
             errors.append(f"{label}: ready item requires text")
+
+        allowed = {str(x).lower() for x in settings.get("allowed_link_domains", [])}
+        for raw in extract_urls(text):
+            cleaned = raw.rstrip(".,、。)]}＞>」』")
+            host = (urlparse(cleaned).hostname or "").lower()
+            if not host:
+                errors.append(f"{label}: invalid URL {raw!r}")
+            elif allowed and host not in allowed:
+                errors.append(f"{label}: unapproved link domain {host!r}")
 
         max_chars = int(settings.get("max_raw_characters", 280))
         if len(text) > max_chars:
