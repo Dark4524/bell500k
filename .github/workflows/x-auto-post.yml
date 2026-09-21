@@ -6,8 +6,11 @@ on:
       - "x_auto/trigger.txt"
   schedule:
     - cron: "45 22 * * *" # 07:45 JST
+    - cron: "55 22 * * *" # 07:55 JST fallback
     - cron: "15 3 * * *"  # 12:15 JST
+    - cron: "25 3 * * *"  # 12:25 JST fallback
     - cron: "30 11 * * *" # 20:30 JST
+    - cron: "40 11 * * *" # 20:40 JST fallback
   workflow_dispatch:
     inputs:
       mode:
@@ -56,9 +59,9 @@ jobs:
           else
             echo "mode=scheduled" >> "$GITHUB_OUTPUT"
             case "${{ github.event.schedule }}" in
-              "45 22 * * *") echo "slot=morning" >> "$GITHUB_OUTPUT" ;;
-              "15 3 * * *")  echo "slot=midday" >> "$GITHUB_OUTPUT" ;;
-              "30 11 * * *") echo "slot=evening" >> "$GITHUB_OUTPUT" ;;
+              "45 22 * * *"|"55 22 * * *") echo "slot=morning" >> "$GITHUB_OUTPUT" ;;
+              "15 3 * * *"|"25 3 * * *")  echo "slot=midday" >> "$GITHUB_OUTPUT" ;;
+              "30 11 * * *"|"40 11 * * *") echo "slot=evening" >> "$GITHUB_OUTPUT" ;;
               *) echo "slot=evening" >> "$GITHUB_OUTPUT" ;;
             esac
           fi
