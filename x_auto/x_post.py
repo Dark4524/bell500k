@@ -4,9 +4,10 @@ import os
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from urllib.parse import urlparse
 
 import requests
 from requests_oauthlib import OAuth1
@@ -26,6 +27,8 @@ DEFAULT_SETTINGS = {
     "max_raw_characters": 280,
     "metrics_enabled": False,
     "metrics_checkpoints_hours": [24, 72],
+    "max_url_posts_per_7_days": 2,
+    "allowed_link_domains": ["dark4524.github.io", "x.com"],
 }
 
 
@@ -71,6 +74,44 @@ def sanitize_post_text(text, settings):
 
 def normalize_for_duplicate(text):
     return re.sub(r"\s+", " ", text.strip()).casefold()
+
+
+def extract_urls(text):
+    return re.findall(r"https?://[^\\s]+", text)
+
+
+def validate_urls(text, settings):
+    urls = extract_urls(text)
+    allowed = {str(x).lower() for x in settings.get("allowed_link_domains", [])}
+    for raw in urls:
+        cleaned = raw.rstrip(".,、。)]}＞>」』")
+        host = (urlparse(cleaned).hostname or "").lower()
+        if not host:
+            raise RuntimeError(f"INVALID_URL: {raw}")
+        if allowed and host not in allowed:
+            raise RuntimeError(f"UNAPPROVED_LINK_DOMAIN: {host}")
+    return urls
+
+
+def url_posts_in_last_7_days(items, now):
+    threshold = now - timedelta(days=7)
+    count = 0
+    for item in items:
+        if item.get("status") != "posted":
+            continue
+        posted_at = item.get("posted_at")
+        try:
+            dt = datetime.fromisoformat(str(posted_at))
+        except (TypeError, ValueError):
+            continue
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=JST)
+        if dt.astimezone(JST) < threshold:
+            continue
+        prior = item.get("posted_text") or item.get("text") or ""
+        if extract_urls(prior):
+            count += 1
+    return count
 
 
 def create_post(text):
@@ -190,6 +231,28 @@ def run_scheduled(slot):
     if post_text != original_text:
         print("POST_TEXT_SANITIZED")
         target["posted_text"] = post_text
+
+    try:
+        urls = validate_urls(post_text, settings)
+    except Exception as exc:
+        target["status"] = "blocked"
+        target["last_error"] = str(exc)[:500]
+        target["last_attempt_at"] = now.isoformat()
+        save_queue(items)
+        raise
+
+    if urls:
+        max_url_posts = int(settings.get("max_url_posts_per_7_days", 2))
+        recent_url_posts = url_posts_in_last_7_days(items, now)
+        if recent_url_posts >= max_url_posts:
+            target["status"] = "blocked"
+            target["last_error"] = (
+                f"URL_POST_LIMIT_REACHED count={recent_url_posts} "
+                f"limit={max_url_posts} window=7d"
+            )
+            target["last_attempt_at"] = now.isoformat()
+            save_queue(items)
+            raise RuntimeError(target["last_error"])
 
     max_chars = int(settings.get("max_raw_characters", 280))
     if len(post_text) > max_chars:
